@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Editor </title>
+
+<!--en este codigo el usuario edita y descarga el codigo xml-->
+<style>
+    /* Estilos CSS para la barra de navegación */
+    .navbar {
+        overflow: hidden;
+        background-color: #333; /* Color de fondo de la barra de navegación */
+    }
+
+    .navbar a {
+        float: left;
+        display: block;
+        color: white;
+        text-align: center;
+        padding: 14px 20px;
+        text-decoration: none;
+    }
+
+    .navbar a:hover {
+        background-color: #ddd; /* Color de fondo cuando se pasa el ratón sobre el enlace */
+        color: black;
+    }
+</style>
+<style>
+    body {
+        font-family: 'Courier New', Courier, monospace;
+        margin: 0;
+        padding: 0;
+        background-color: #222;
+        color: #ddd;
+    }
+    #editor-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+    }
+    #editor {
+        width: 80%;
+        height: 60vh;
+        background-color: #111;
+        border: none;
+        color: #ddd;
+        font-family: 'Courier New', Courier, monospace;
+        font-size: 16px;
+        padding: 10px;
+        box-sizing: border-box;
+        outline: none;
+    }
+    #color-picker {
+        margin-top: 20px;
+    }
+    #download-btn {
+        margin-top: 20px;
+        padding: 10px 20px;
+        background-color: #4CAF50;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+</style>
+</head>
+<body>
+ <!-- Barra de navegación -->
+ <div class="navbar">
+    <a href="principal.html">Inicio</a>
+    <a href="ejemplo1.html">editor1</a>
+    <a href="ejemplo2.html">editor2</a>
+    <a href="ejemplo3.html">editor txt</a>
+    <a href="ejemplo 4.html">editor batch</a>
+    <a href="editor de texto.html">editor de texto</a>
+</div>
+<h4>editor de html</h4>
+<div id="editor-container">
+    <textarea id="editor" placeholder="Escribe o pega tu html aquí..."></textarea>
+    <input type="color" id="color-picker" value="#ffffff">
+    <button id="download-btn">Descargar</button>
+</div>
+
+<script>
+    // Obtener el elemento del editor de texto
+    const editor = document.getElementById('editor');
+    // Obtener el selector de color
+    const colorPicker = document.getElementById('color-picker');
+    // Obtener el botón de descarga
+    const downloadBtn = document.getElementById('download-btn');
+
+    // Función para guardar el contenido del editor en el almacenamiento local
+    function guardarContenido() {
+        localStorage.setItem('xmlContent', editor.value);
+    }
+
+    // Función para cargar el contenido del editor desde el almacenamiento local
+    function cargarContenido() {
+        const contenidoGuardado = localStorage.getItem('xmlContent');
+        if (contenidoGuardado) {
+            editor.value = contenidoGuardado;
+        }
+    }
+
+    // Cargar contenido al cargar la página
+    cargarContenido();
+
+    // Guardar contenido cuando se modifica el editor
+    editor.addEventListener('input', guardarContenido);
+
+    // Función para cambiar el color del texto en el editor
+    function cambiarColorTexto() {
+        const color = colorPicker.value;
+        editor.style.color = color;
+    }
+
+    // Cambiar el color del texto cuando se selecciona un nuevo color
+    colorPicker.addEventListener('input', cambiarColorTexto);
+
+    // Función para descargar el contenido del editor como un archivo XML
+    function descargarXML() {
+        const contenido = editor.value;
+        const blob = new Blob([contenido], { type: 'text/xml' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'archivo.html';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    }
+
+    // Activar la descarga cuando se hace clic en el botón de descarga
+    downloadBtn.addEventListener('click', descargarXML);
+</script>
+
+</body>
+</html>
