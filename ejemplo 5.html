@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Text Editor</title>
+<!--
+  ESTE EDITOR ESTA EN PROCESO, EN ESTE SE PUEDE CAMBIAR EL TAMAÑO DE LETRA,
+   VOLVER TODAS MAYUSCULAS, INSERTAR IMAGENES Y SE DESCARGARA 
+   COMO UN HTML, ADEMAS DE PODER MAYUSCULAS DESPUES DEL PUNTO Y AL PRINCIPIO DEL PARRAFO.
+  -->
+<style>
+  body {
+    font-family: 'Courier New', Courier, monospace;
+    background-color: black;
+    color: white;
+    padding: 20px;
+  }
+
+  textarea {
+    width: 100%;
+    height: 300px;
+    background-color: black;
+    color: white;
+    border: none;
+    resize: none;
+    font-family: 'Courier New', Courier, monospace;
+  }
+
+  input[type="submit"], input[type="button"], select {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+
+  .image-preview {
+    max-width: 100%;
+    max-height: 300px;
+    margin-top: 10px;
+  }
+</style>
+<style>
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+  }
+  
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: -250px; /* Ancho inicial de la barra lateral */
+    width: 250px;
+    height: 100%;
+    background-color: #000;
+    color: #ff0000; /* Texto rojo */
+    transition: all 0.3s ease;
+    padding-top: 20px;
+    z-index: 1000; /* Asegura que esté encima del contenido */
+  }
+  
+  .sidebar.active {
+    left: 0; /* Muestra la barra lateral cuando está activa */
+  }
+  
+  .sidebar .close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+  }
+</style>
+</head>
+<body>
+  <div class="sidebar" id="sidebar">
+    <a href="principal.html">principal</a><br><br>
+    <a href="ejemplo1.html">editor html</a><br><br>
+    <a href="ejemplo2.html">editor general</a><br><br>
+    <a href="ejemplo3.html">editor txt</a><br><br>
+    <a href="ejemplo 4.html">editor batch</a><br><br>
+    <a href="ejemplo 5.html">editor5</a><br><br>
+    <span class="close-btn" onclick="toggleSidebar()">&#10006;</span> <!-- Botón para cerrar -->
+  </div>
+  
+  <button onclick="toggleSidebar()">Abrir</button> <!-- Botón para abrir -->
+  
+  <script>
+  function toggleSidebar() {
+    var sidebar = document.getElementById("sidebar");
+    sidebar.classList.toggle('active');
+  }
+  </script>
+
+
+
+
+  <form id="textEditorForm">
+    <textarea id="textInput" placeholder="Type your text here..."></textarea>
+    <br>
+    <input type="submit" value="Save">
+    <input type="button" value="Download" onclick="downloadFile()">
+    <br>
+    <input type="button" value="Uppercase" onclick="formatText('uppercase')">
+    <input type="button" value="Lowercase" onclick="formatText('lowercase')">
+    <input type="button" value="Capitalize" onclick="formatText('capitalize')">
+    <input type="button" value="Copy" onclick="copyText()">
+    <input type="button" value="Clear" onclick="clearText()">
+
+    <!--funcion imagen-->
+    <input type="file" id="imageInput" accept="image/*" onchange="previewImage(event)">
+      <div id="imagePreview" class="image-preview"></div>
+       <select id="fontSelect" onchange="changeFont()">
+        <option value="Arial">Arial</option>
+        <option value="Arial Black">Arial Black</option>
+        <option value="Courier New">Courier New</option>
+        <option value="Georgia">Georgia</option>
+        <option value="Times New Roman">Times New Roman</option>
+        <option value="Verdana">Verdana</option>
+        <option value="Rubik">Rubik</option>
+        <option value="Cheddar gothic">Cheddar gothic</option>
+      </select>
+  
+  
+    <select id="fontSizeSelect" onchange="changeFontSize()">
+      <option value="9px">9px</option>
+      <option value="10px">10px</option>
+      <option value="12px">12px</option>
+      <option value="14px">14px</option>
+      <option value="16px">16px</option>
+      <option value="18px">18px</option>
+      <option value="20px">20px</option>
+    </select>
+  </form>
+
+  <script>
+    // Función para guardar el texto en el navegador
+    function saveText() {
+      var text = document.getElementById("textInput").value;
+      localStorage.setItem("savedText", text);
+      alert("Text saved successfully!");
+    }
+
+    // Función para cargar el texto almacenado en el navegador al cargar la página
+    window.onload = function() {
+      var savedText = localStorage.getItem("savedText");
+      if(savedText) {
+        document.getElementById("textInput").value = savedText;
+      }
+    }
+
+ 
+    // Función para descargar el texto y la imagen como un archivo HTML
+    function downloadFile() {
+      var text = document.getElementById("textInput").value;
+      var imageSrc = document.getElementById("imagePreview").querySelector("img")?.src || "";
+      var htmlContent = `
+        <!DOCTYPE html>
+        <html lang="es">
+        <head>
+        <meta charset="UTF-8">
+        <title>Text and Image</title>
+        </head>
+        <body>
+        <div>${text}</div>
+        <img src="${imageSrc}" width="150px" heigth="150px" alt="Image">
+        </body>
+        </html>
+      `;
+      var filename = "text_with_image.html";
+      var element = document.createElement("a");
+      element.setAttribute("href", "data:text/html;charset=utf-8," + encodeURIComponent(htmlContent));
+      element.setAttribute("download", filename);
+      element.style.display = "none";
+      document.body.appendChild(element);
+      element.click();
+      document.body.removeChild(element);
+    }
+
+
+   // Función para mostrar la imagen seleccionada
+   function previewImage(event) {
+      var imagePreview = document.getElementById("imagePreview");
+      imagePreview.innerHTML = "";
+      var file = event.target.files[0];
+      var reader = new FileReader();
+      reader.onload = function(event) {
+        var img = document.createElement("img");
+        img.src = event.target.result;
+        img.classList.add("image-preview");
+        imagePreview.appendChild(img);
+      };
+      reader.readAsDataURL(file);
+    }
+
+    // Función para formatear el texto
+    function formatText(type) {
+      var textInput = document.getElementById("textInput");
+      var text = textInput.value;
+      switch(type) {
+        case 'uppercase':
+          textInput.value = text.toUpperCase();
+          break;
+        case 'lowercase':
+          textInput.value = text.toLowerCase();
+          break;
+        case 'capitalize':
+          textInput.value = text.replace(/\b\w/g, function(char) {
+            return char.toUpperCase();
+          });
+          break;
+      }
+    }
+
+    // Función para copiar el texto al portapapeles
+    function copyText() {
+      var textInput = document.getElementById("textInput");
+      textInput.select();
+      document.execCommand("copy");
+      alert("Text copied to clipboard!");
+    }
+
+    // Función para limpiar el texto del área de texto
+    function clearText() {
+      document.getElementById("textInput").value = "";
+    }
+
+    // Función para cambiar el tipo de fuente del texto
+    function changeFont() {
+      var fontSelect = document.getElementById("fontSelect");
+      var selectedFont = fontSelect.options[fontSelect.selectedIndex].value;
+      document.getElementById("textInput").style.fontFamily = selectedFont;
+    }
+
+    // Función para cambiar el tamaño de la fuente del texto
+    function changeFontSize() {
+      var fontSizeSelect = document.getElementById("fontSizeSelect");
+      var selectedFontSize = fontSizeSelect.options[fontSizeSelect.selectedIndex].value;
+      document.getElementById("textInput").style.fontSize = selectedFontSize;
+    }
+
+    // Event listener para guardar el texto cuando se envía el formulario
+    document.getElementById("textEditorForm").addEventListener("submit", function(event) {
+      event.preventDefault(); // Evitar el comportamiento predeterminado del formulario
+      saveText();
+    });
+
+  </script>
+
+</body>
+</html>
