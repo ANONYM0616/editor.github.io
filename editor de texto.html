@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Editor</title>
+<style>
+    /* Estilos CSS para la barra de navegación */
+    .navbar {
+        overflow: hidden;
+        background-color: #333; /* Color de fondo de la barra de navegación */
+    }
+
+    .navbar a {
+        float: left;
+        display: block;
+        color: white;
+        text-align: center;
+        padding: 14px 20px;
+        text-decoration: none;
+    }
+
+    .navbar a:hover {
+        background-color: #ddd; /* Color de fondo cuando se pasa el ratón sobre el enlace */
+        color: black;
+    }
+</style>
+<style>
+    #editor {
+        width: 100%;
+        height: 300px;
+    }
+</style>
+</head>
+<body>
+     <!-- Barra de navegación -->
+<div class="navbar">
+    <a href="principal.html">Inicio</a>
+    <a href="ejemplo1.html">editor1</a>
+    <a href="ejemplo2.html">editor2</a>
+    <a href="ejemplo3.html">editor txt</a>
+    <a href="ejemplo 4.html">editor batch</a>
+    <a href="editor de texto.html">editor de texto</a>
+</div>
+<h4>Editor de texto</h4>
+<textarea id="editor">
+   
+    </textarea>
+    <br>
+<button onclick="downloadHTML()">Download HTML</button>
+<button onclick="changeExtension('txt')">Download TXT</button>
+<button onclick="changeExtension('docx')">Download docx</button>
+<button onclick="changeExtension('pdf')">Download Pdf</button>
+
+<script>
+function download(filename, text) {
+    var element = document.createElement('a');
+    element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+    element.setAttribute('download', filename);
+  
+    element.style.display = 'none';
+    document.body.appendChild(element);
+  
+    element.click();
+  
+    document.body.removeChild(element);
+}
+
+function downloadHTML() {
+    var content = document.getElementById('editor').value;
+    download('index.html', content);
+}
+
+function changeExtension(extension) {
+    var content = document.getElementById('editor').value;
+    var filename = 'index.' + extension;
+    download(filename, content);
+}
+</script>
+</body>
+</html>
+
+
+
